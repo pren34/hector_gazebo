@@ -98,7 +98,6 @@
 namespace gazebo {
 
   std::string left_front_joint_name_;
-  physics::JointPtr joints2[1];
 
   enum {
     RIGHT,
@@ -163,7 +162,7 @@ namespace gazebo {
 
     this->torque = 5.0;
     if (!_sdf->HasElement("torque")) {
-      ROS_WARN("GazeboRosDiffDriveMultiWheel Plugin (ns = %s) missing <torque>, defaults to %f",
+      ROS_WARN("GazeboRosDiffDriveMultiWheel Plugin (ns = %s) missing <torque>, defaults  djsflsjlfdsflsfjof to %f",
           this->robot_namespace_.c_str(), this->torque);
     } else {
       this->torque = _sdf->GetElement("torque")->Get<double>();
@@ -326,7 +325,7 @@ namespace gazebo {
       for (size_t side = 0; side < 2; ++side){
         for (size_t i = 0; i < joints_[side].size(); ++i){
           #if GAZEBO_MAJOR_VERSION > 2
-          joints_[side][i]->SetParam("vel", 0, wheel_speed_[side] / (0.5 * wheel_diameter_));
+          joints_[side][i]->SetParam("vel", 0, wheel_speed_[side] /  (wheel_diameter_ / 2 ));
           #else
           joints_[side][i]->SetVelocity(0, wheel_speed_[side] / (0.5 * wheel_diameter_));
           #endif
