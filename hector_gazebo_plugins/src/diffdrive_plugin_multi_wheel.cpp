@@ -97,6 +97,9 @@
 
 namespace gazebo {
 
+  std::string left_front_joint_name_;
+  physics::JointPtr joints2[1];
+
   enum {
     RIGHT,
     LEFT,
@@ -255,8 +258,8 @@ namespace gazebo {
                    this->robot_namespace_.c_str(), joint_names_[side][i].c_str());
           gzthrow(error);
         }
-#if (GAZEBO_MAJOR_VERSION > 4)
-        joints_[side][i]->SetEffortLimit(0, torque);
+#if GAZEBO_MAJOR_VERSION > 2
+        joints_[side][i]->SetParam("fmax", 0, torque);
 #else
         joints_[side][i]->SetMaxForce(0, torque);
 #endif
@@ -316,12 +319,17 @@ namespace gazebo {
 
       // Update robot in case new velocities have been requested
       getWheelVelocities();
+      
       //joints[LEFT]->SetVelocity(0, wheel_speed_[LEFT] / wheel_diameter_);
       //joints[RIGHT]->SetVelocity(0, wheel_speed_[RIGHT] / wheel_diameter_);
 
       for (size_t side = 0; side < 2; ++side){
         for (size_t i = 0; i < joints_[side].size(); ++i){
+          #if GAZEBO_MAJOR_VERSION > 2
+          joints_[side][i]->SetParam("vel", 0, wheel_speed_[side] / (0.5 * wheel_diameter_));
+          #else
           joints_[side][i]->SetVelocity(0, wheel_speed_[side] / (0.5 * wheel_diameter_));
+          #endif
         }
       }
 
